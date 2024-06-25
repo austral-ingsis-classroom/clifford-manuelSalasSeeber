@@ -1,0 +1,35 @@
+@startuml
+class FileManager {
+    - currentDirectory: Directory
+    - rootDirectory: Directory
+    + executor: CommandExecutor
+}
+
+interface Node {
+}
+
+class Directory {
+}
+
+class File {
+}
+
+class CommandExecutor {
+    + executeCommand(command: Command) : CommandResult
+}
+
+interface Command {
+}
+
+interface CommandResult {
+}
+
+FileManager -> Node
+
+Node <|-- Directory
+Node <|-- File
+Directory -> File
+CommandExecutor *- FileManager
+CommandExecutor --> Command
+CommandExecutor --> CommandResult
+@enduml
