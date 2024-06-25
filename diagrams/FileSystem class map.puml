@@ -1,35 +1,73 @@
+
 @startuml
-class FileManager {
-    - currentDirectory: Directory
-    - rootDirectory: Directory
-    + executor: CommandExecutor
-}
 
 interface Node {
+    + String getName()
+    + Directory getParent()
+}
+
+class VirtualFileSystem {
+    - Node root
+    - Node current
+    + void execute(String command)
 }
 
 class Directory {
+    - String name
+    - List<Node>
+    + String getName()
+    + Directory getParent()
+    + void add(Node node)
+    + void remove(Node node)
+    + List<Node> getChildren()
 }
 
 class File {
+    - String name
+    + String getName()
+    + Directory getParent()
 }
 
-class CommandExecutor {
-    + executeCommand(command: Command) : CommandResult
-}
+Node <|.. Directory
+Node <|.. File
+
+VirtualFileSystem *- Node
+Command <- VirtualFileSystem
+Node --* Directory
+
 
 interface Command {
+    + void execute()
 }
 
-interface CommandResult {
+class ListPath {
+    + void execute()
 }
 
-FileManager -> Node
+class ListChildren{
+    + void execute()
+}
 
-Node <|-- Directory
-Node <|-- File
-Directory -> File
-CommandExecutor *- FileManager
-CommandExecutor --> Command
-CommandExecutor --> CommandResult
+class ChangeDirectory {
+    + void execute()
+}
+
+class MakeDirectory {
+    + void execute()
+}
+
+class Remove {
+    + void execute()
+}
+
+class Touch {
+    + void execute()
+}
+
+Command <|.. ListPath
+Command <|.. ListChildren
+Command <|.. ChangeDirectory
+Command <|.. MakeDirectory
+Command <|.. Remove
+Touch .|> Command
 @enduml
